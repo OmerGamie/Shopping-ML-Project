@@ -1,0 +1,24 @@
+# data
+data/raw/
+data/processed/
+
+# models
+models/
+
+# python
+__pycache__/
+*.pyc
+
+# virtual env
+venv/
+.env
+
+# notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Kaggle credentials
+.kaggle/
+kaggle.json
