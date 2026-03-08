@@ -4,7 +4,8 @@ scikit-learn
 matplotlib
 seaborn
 jupyter
+ipykernel
 kaggle
 xgboost
 lightgbm
-joblib
+joblib 
