@@ -20,7 +20,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
-
+from src.features import engineer_features
 
 def separate_features_target(
     df: pd.DataFrame, target_column: str
@@ -156,10 +156,12 @@ def preprocess_dataset(
     Full preprocessing pipeline for the dataset:
 
     Steps:
-    1. Separate features and target
-    2. Identify categorical and numerical features
-    3. Build preprocessing pipeline
-    4. Split dataset into train and test sets
+    1. Feature engineering
+    2. Separate features and target
+    3. Detect feature types
+    4. Train/test split
+    5. Fit preprocessing pipeline
+    6. Transform features
 
     Parameters
     ----------
@@ -177,20 +179,38 @@ def preprocess_dataset(
     y_train, y_test : pd.Series
         Train and test target values
     """
-
-    # Step 1: Separate features and target
+    
+    df = df.copy()
+    
+    # Step 1: Apply feature engineering
+    df = engineer_features(df)
+    
+    # Step 2: Separate features and target
     X, y = separate_features_target(df, target_column)
 
-    # Step 2: Identify feature types
+    # Step 3: Identify feature types
     numerical_features, categorical_features = get_feature_types(X)
-
-    # Step 3: Build preprocessing pipeline
-    preprocessor = build_preprocessing_pipeline(numerical_features, categorical_features)
 
     # Step 4: Split data
     X_train, X_test, y_train, y_test = split_data(X, y)
 
-    return preprocessor, X_train, X_test, y_train, y_test
+    # Step 5: Build preprocessing pipeline
+    preprocessor = build_preprocessing_pipeline(numerical_features, categorical_features)
+
+    # Step 6: Fit on training data
+    X_train_processed = preprocessor.fit_transform(X_train)
+
+    # Step 7: Transform test data
+    X_test_processed = preprocessor.transform(X_test)
+    
+
+    return (
+        X_train_processed,
+        X_test_processed,
+        y_train,
+        y_test,
+        preprocessor
+    )
 
 
 if __name__ == "__main__":
