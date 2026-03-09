@@ -224,7 +224,7 @@ if __name__ == "__main__":
     df = load_raw_data(dataset_name)
 
     # Preprocess dataset
-    preprocessor, X_train, X_test, y_train, y_test = preprocess_dataset(
+    X_train, X_test, y_train, y_test, preprocessor = preprocess_dataset(
         df, target_column="shopping_preference"
     )
 
